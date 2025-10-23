@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  minecraft-fabric:
+    # Build the image using the Dockerfile in the current directory
+    build: .
+
+    container_name: minecraft-fabric-server
+
+    # Map the default Minecraft port (25565)
+    ports:
+      - "25565:25565"
+
+    # 💾 Volume mapping to persist data and inject your server files 💾
+    # This maps your local server path (~/minecraft) to the container's working directory (/data).
+    # All server files, including the world data and the fabric executable, will be in ~/minecraft.
+    # The '.' indicates the current directory, which is ~/minecraft/
+    volumes:
+      - ./data:/data
+
+    # Memory limit and initialization.
+    # The -Xmx/-Xms flags in the Dockerfile already handle the JVM memory,
+    # but setting the container limit is good for host resource management.
+    deploy:
+      resources:
+        limits:
+          memory: 16G
+        reservations:
+          memory: 16G
+
+    # Restart policy
+    restart: always
